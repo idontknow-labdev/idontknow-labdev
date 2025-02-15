@@ -1,0 +1,476 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Para Mi Koalita 💖</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap');
+        body {
+            background: linear-gradient(to bottom, #0a0a2e, #1a1a4a);
+            color: #fff;
+            font-family: 'Poppins', sans-serif;
+            text-align: center;
+            padding: 20px;
+            overflow: hidden;
+            position: relative;
+            min-height: 100vh;
+            margin: 0;
+            transition: background 2s ease;
+        }
+        .intro {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: white;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            transition: opacity 1s ease, visibility 1s ease;
+            z-index: 1000;
+        }
+        .intro h1 {
+            font-size: 3.5em;
+            color: #0077cc;
+        }
+        .intro h2 {
+            font-size: 2.5em;
+            color: #ff69b4;
+        }
+        .intro-box {
+            background: #ff69b4;
+            color: white;
+            padding: 20px;
+            border-radius: 20px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+            margin-top: 20px;
+            font-size: 1.8em;
+            cursor: pointer;
+            transition: transform 0.3s ease;
+        }
+        .intro-box:hover {
+            transform: scale(1.1);
+        }
+        .message-container {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            transition: opacity 1s ease;
+            z-index: 2;
+        }
+        .hidden-message {
+            display: none;
+            font-size: 1.8em;
+            color: #fff;
+            padding: 50px;
+            background: rgba(0, 0, 0, 0.3);
+            border-radius: 20px;
+            width: 80%;
+            margin: auto;
+            text-align: center;
+            backdrop-filter: blur(5px);
+        }
+        .hidden-message h2 {
+            color: #ffcc00;
+            font-size: 2.5em;
+            text-shadow: 0 0 10px rgba(255, 204, 0, 0.5);
+        }
+        .highlight {
+            color: #ffcc00;
+            font-weight: bold;
+            text-shadow: 0 0 5px rgba(255, 204, 0, 0.3);
+        }
+        .stars {
+            position: fixed;
+            width: 100%;
+            height: 100%;
+            top: 0;
+            left: 0;
+            pointer-events: none;
+            transition: opacity 2s ease;
+        }
+        .star {
+            position: absolute;
+            background: white;
+            border-radius: 50%;
+            animation: twinkle 2s infinite alternate;
+        }
+        .moon {
+            position: fixed;
+            width: 150px;
+            height: 150px;
+            background: linear-gradient(45deg, #ffd700, #fff6a3);
+            border-radius: 50%;
+            top: 50px;
+            right: 50px;
+            box-shadow: 0 0 50px #ffd700;
+            animation: moonGlow 4s infinite alternate;
+            transition: opacity 2s ease;
+        }
+        .wind-particle {
+            position: absolute;
+            background: rgba(255, 255, 255, 0.3);
+            pointer-events: none;
+            animation: windMove linear infinite;
+        }
+        .button {
+            background: #ff69b4;
+            color: white;
+            padding: 15px 30px;
+            border-radius: 25px;
+            border: none;
+            font-size: 1.2em;
+            cursor: pointer;
+            margin-top: 20px;
+            transition: transform 0.3s ease, background 0.3s ease;
+        }
+        .button:hover {
+            transform: scale(1.1);
+            background: #ff4da6;
+        }
+        .love-message {
+            font-size: 2.5em;
+            background: rgba(0, 0, 0, 0.3);
+            padding: 30px;
+            border-radius: 20px;
+            margin: 20px;
+            max-width: 80%;
+            color: #ff69b4;
+            text-shadow: 0 0 10px rgba(255, 105, 180, 0.3);
+            transform: scale(0.9);
+            opacity: 0;
+            transition: transform 0.5s ease, opacity 0.5s ease;
+            white-space: pre-line;
+        }
+        .love-message.visible {
+            transform: scale(1);
+            opacity: 1;
+        }
+
+        /* Nuevos estilos para el atardecer */
+        .sunset-background {
+            background: linear-gradient(to bottom, #ff7e5f, #feb47b, #ffcda5) !important;
+        }
+
+        .sun {
+            position: fixed;
+            width: 200px;
+            height: 200px;
+            background: radial-gradient(circle, #ff8833, #ff4500);
+            border-radius: 50%;
+            top: 50px;
+            right: -250px;
+            box-shadow: 0 0 100px #ff4500;
+            transition: all 3s ease;
+            opacity: 0;
+        }
+
+        .sun.visible {
+            right: 50px;
+            opacity: 1;
+        }
+
+        .grass {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            height: 100px;
+            background: linear-gradient(to top, #4a8505, #66b032);
+            transform: translateY(100%);
+            transition: transform 2s ease;
+        }
+
+        .grass.visible {
+            transform: translateY(0);
+        }
+
+        .flower {
+            position: absolute;
+            width: 20px;
+            height: 20px;
+            background: radial-gradient(circle, #ff69b4, #ff1493);
+            border-radius: 50%;
+            animation: sway 3s ease-in-out infinite;
+        }
+
+        .flower::before {
+            content: '';
+            position: absolute;
+            bottom: -20px;
+            left: 9px;
+            width: 2px;
+            height: 20px;
+            background: #4a8505;
+        }
+
+        .white-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: white;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 1s ease;
+            z-index: 999;
+        }
+
+        .final-message {
+            font-size: 1.8em;
+            line-height: 1.8;
+            padding: 40px;
+            background: rgba(255, 255, 255, 0.9) !important;
+            color: #333 !important;
+            border-radius: 20px;
+            box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
+            max-width: 800px;
+            margin: 0 auto;
+            transform: scale(0.9);
+            opacity: 0;
+            transition: all 1s ease;
+        }
+
+        .final-message.visible {
+            transform: scale(1);
+            opacity: 1;
+        }
+
+        @keyframes twinkle {
+            0% { opacity: 0.3; transform: scale(1); }
+            50% { opacity: 0.8; transform: scale(1.2); }
+            100% { opacity: 1; transform: scale(1); }
+        }
+        @keyframes moonGlow {
+            0% { box-shadow: 0 0 50px #ffd700; }
+            100% { box-shadow: 0 0 100px #ffd700; }
+        }
+        @keyframes windMove {
+            from {
+                transform: translateX(-100%) translateY(0);
+            }
+            to {
+                transform: translateX(100vw) translateY(20px);
+            }
+        }
+        @keyframes sway {
+            0%, 100% { transform: rotate(-5deg); }
+            50% { transform: rotate(5deg); }
+        }
+    </style>
+</head>
+<body>
+    <div class="moon"></div>
+    <div class="stars" id="stars"></div>
+    <div id="windContainer"></div>
+    
+    <!-- Nuevos elementos para el atardecer -->
+    <div class="white-overlay" id="whiteOverlay"></div>
+    <div class="sun" id="sun"></div>
+    <div class="grass" id="grass"></div>
+    <div id="flowers"></div>
+    
+    <div class="intro" id="intro">
+        <h1>Hola 💖</h1>
+        <h2>¡Bienvenido mi Koalita! 🐨💕</h2>
+        <div class="intro-box" onclick="startExperience()">🎁 ¡Haz clic aquí para ver tu regalo! 🎁</div>
+    </div>
+    
+    <div class="message-container">
+        <div id="loveMessage" class="hidden-message">
+            <h2>Para mi amado Ángel 💙</h2>
+            <p>
+                Desde el primer momento en que te conocí, supe que eras <span class="highlight">alguien especial</span>. Cada día a tu lado es un <span class="highlight">regalo</span>, y no hay palabras suficientes para describir lo <span class="highlight">feliz</span> que me haces. 
+                Eres <span class="highlight">mi apoyo</span>, <span class="highlight">mi alegría</span>, <span class="highlight">mi refugio</span> y <span class="highlight">mi mejor amigo</span>. Gracias por cada <span class="highlight">sonrisa</span>, cada <span class="highlight">abrazo</span> y cada momento compartido. 
+                Prometo seguir <span class="highlight">amándote</span>, <span class="highlight">cuidándote</span> y estando para ti en cada paso del camino. ¡Eres lo <span class="highlight">mejor</span> que me ha pasado, mi hermoso Koalita! 💕
+            </p>
+            <button class="button" onclick="showNextMessage()" id="nextButton">Siguiente</button>
+        </div>
+        <div id="specialMessage" class="love-message"></div>
+        <button class="button" onclick="showNextMessage()" id="continueButton" style="display: none;">Siguiente</button>
+    </div>
+    
+    <script>
+        const messages = [
+            "Eres el amor de mi vida, mi todo, mi razón de sonreír cada mañana 🌟",
+            "Contigo todo es mejor, más brillante, más especial 💫",
+            "Cada momento a tu lado es un tesoro que guardo en mi corazón 💝",
+            "Tu amor me hace la persona más feliz del mundo 🌈",
+            "Eres mi presente y mi futuro, mi amor eterno 💑",
+            "Gracias por existir y por ser parte de mi vida... ✨",
+            `Mi amor precioso... sé que últimamente hemos tenido algunos momentos difíciles, y quiero disculparme desde lo más profundo de mi corazón 💝
+
+            A veces las palabras no salen como deberían, o las acciones no reflejan todo el amor que siento por ti. Pero quiero que sepas que cada día me esfuerzo por ser mejor para ti, porque te mereces lo mejor del mundo 🌟
+
+            Prometo seguir trabajando en nosotros, en nuestra comunicación, en ser mejor cada día. Porque nuestro amor vale todo el esfuerzo del mundo ✨
+
+            TE AMO INFINITAMENTE MI KOALITA 🐨💕`
+        ];
+
+        let currentMessage = 0;
+
+        function startExperience() {
+            document.getElementById('intro').style.opacity = '0';
+            document.getElementById('intro').style.visibility = 'hidden';
+            setTimeout(() => {
+                document.getElementById('loveMessage').style.display = 'block';
+            }, 1000);
+        }
+
+        function showNextMessage() {
+            const loveMessage = document.getElementById('loveMessage');
+            const specialMessage = document.getElementById('specialMessage');
+            const continueButton = document.getElementById('continueButton');
+            
+            if (currentMessage === 0) {
+                loveMessage.style.opacity = '0';
+                setTimeout(() => {
+                    loveMessage.style.display = 'none';
+                    specialMessage.style.display = 'block';
+                    continueButton.style.display = 'block';
+                    showMessage();
+                }, 500);
+            } else {
+                showMessage();
+            }
+        }
+
+        function showMessage() {
+            const specialMessage = document.getElementById('specialMessage');
+            const continueButton = document.getElementById('continueButton');
+            
+            specialMessage.classList.remove('visible');
+            
+            setTimeout(() => {
+                if (currentMessage < messages.length) {
+                    if (currentMessage === messages.length - 1) {
+                        // Transición al atardecer
+                        const whiteOverlay = document.getElementById('whiteOverlay');
+                        whiteOverlay.style.opacity = '1';
+                        
+                        setTimeout(() => {
+                            // Cambiar el fondo y mostrar elementos del atardecer
+                            document.body.classList.add('sunset-background');
+                            document.getElementById('sun').classList.add('visible');
+                            document.getElementById('grass').classList.add('visible');
+                            createFlowers();
+                            
+                            // Ocultar elementos nocturnos
+                            document.getElementById('stars').style.opacity = '0';
+                            document.querySelector('.moon').style.opacity = '0';
+                            document.getElementById('windContainer').style.opacity = '0';
+                            
+                            setTimeout(() => {
+                                whiteOverlay.style.opacity = '0';
+                                // Mostrar mensaje final con nuevo estilo
+                                specialMessage.className = 'final-message';
+                                specialMessage.textContent = messages[currentMessage];
+                                specialMessage.classList.add('visible');
+                            }, 1000);
+                        }, 1000);
+
+                        continueButton.textContent = 'Volver al inicio';
+                        continueButton.onclick = resetExperience;
+                    } else {
+                        specialMessage.className = 'love-message';
+                        specialMessage.textContent = messages[currentMessage];
+                        specialMessage.classList.add('visible');
+                    }
+                    currentMessage++;
+                }
+            }, 500);
+        }
+
+        function createStars() {
+            const starsContainer = document.getElementById("stars");
+            for (let i = 0; i < 200; i++) {
+                let star = document.createElement("div");
+                star.classList.add("star");
+                star.style.top = `${Math.random() * 100}%`;
+                star.style.left = `${Math.random() * 100}%`;
+                star.style.width = `${Math.random() * 3 + 1}px`;
+                star.style.height = star.style.width;
+                star.style.animationDuration = `${Math.random() * 3 + 2}s`;
+                star.style.animationDelay = `${Math.random() * 2}s`;
+                starsContainer.appendChild(star);
+            }
+        }
+
+        function createWindParticles() {
+            const windContainer = document.getElementById("windContainer");
+            setInterval(() => {
+                const particle = document.createElement("div");
+                particle.classList.add("wind-particle");
+                particle.style.top = `${Math.random() * 100}%`;
+                particle.style.width = `${Math.random() * 50 + 20}px`;
+                particle.style.height = "1px";
+                particle.style.animationDuration = `${Math.random() * 3 + 4}s`;
+                windContainer.appendChild(particle);
+                
+                setTimeout(() => {
+                    windContainer.removeChild(particle);
+                }, 7000);
+            }, 200);
+        }
+
+        function createFlowers() {
+            const flowersContainer = document.getElementById('flowers');
+            flowersContainer.innerHTML = '';
+            const numberOfFlowers = 20;
+
+            for (let i = 0; i < numberOfFlowers; i++) {
+                const flower = document.createElement('div');
+                flower.className = 'flower';
+                flower.style.left = `${Math.random() * 100}%`;
+                flower.style.bottom = `${Math.random() * 50 + 80}px`;
+                flower.style.animationDelay = `${Math.random() * 2}s`;
+                flowersContainer.appendChild(flower);
+            }
+        }
+
+        function resetExperience() {
+          window.open('https://www.roblox.com/es/games/102305272263108/unnamed', '_blank');
+            // Restaurar estado original
+            document.body.classList.remove('sunset-background');
+            document.getElementById('sun').classList.remove('visible');
+            document.getElementById('grass').classList.remove('visible');
+            document.getElementById('stars').style.opacity = '1';
+            document.querySelector('.moon').style.opacity = '1';
+            document.getElementById('windContainer').style.opacity = '1';
+            document.getElementById('flowers').innerHTML = '';
+            
+            // Resto del código de reset original
+            currentMessage = 0;
+            const specialMessage = document.getElementById('specialMessage');
+            const continueButton = document.getElementById('continueButton');
+            
+            specialMessage.classList.remove('visible');
+            setTimeout(() => {
+                document.getElementById('loveMessage').style.display = 'none';
+                specialMessage.style.display = 'none';
+                continueButton.style.display = 'none';
+                specialMessage.textContent = '';
+                continueButton.textContent = 'Siguiente';
+                continueButton.onclick = showNextMessage;
+                document.getElementById('intro').style.opacity = '1';
+                document.getElementById('intro').style.visibility = 'visible';
+            }, 500);
+        }
+
+        // Inicialización
+        createStars();
+        createWindParticles();
+    </script>
+</body>
+</html>
